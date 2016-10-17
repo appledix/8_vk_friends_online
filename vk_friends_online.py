@@ -7,13 +7,13 @@ APP_ID = 5672090
 
 def get_user_login():
     while True:
-        login = input("Login: ")
+        login = input("Login for 'https://vk.com': ")
         if login != "": break
     return login
 
 def get_user_password():
     while True:
-        password = getpass.getpass(prompt='Password: ', stream=None)
+        password = getpass.getpass(prompt="Password for 'https://vk.com': ", stream=None)
         if password != "": break
     return password
 
