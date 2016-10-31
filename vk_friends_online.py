@@ -6,30 +6,24 @@ APP_ID = 5672090
 
 
 def get_user_login():
-    while True:
-        login = input("Login for 'https://vk.com': ")
-        if login: break
-    return login
+    return input("Login for 'https://vk.com': ")
 
 def get_user_password():
-    while True:
-        password = getpass.getpass(prompt="Password for 'https://vk.com': ", stream=None)
-        if password: break
-    return password
+    return getpass.getpass(prompt="Password for 'https://vk.com': ", stream=None)
 
 def get_online_friends(login, password):
     session = vk.AuthSession(
         app_id=APP_ID,
         user_login=login,
-        user_password=password
+        user_password=password,
+        scope=2
         )
     api = vk.API(session)
-    friends = api.friends.get(fields="online")
-    online_friends = list(itertools.filterfalse(lambda friend: friend['online'] != 1, friends))
-    return online_friends
+    online_friends_ids = api.friends.getOnline()
+    return api.users.get(user_ids=online_friends_ids)
 
 def output_friends_to_console(friends_online):
-    print("Друзья онлайн:")
+    print("Friends online:")
     for friend in friends_online:
         print(friend['first_name'], friend['last_name'])
     return
@@ -38,11 +32,11 @@ def output_friends_to_console(friends_online):
 if __name__ == '__main__':
     while True:
         login = get_user_login()
-        password = get_user_password()
-        try:
-            friends_online = get_online_friends(login, password)
-        except Exception:
-            continue
-        else:
-            output_friends_to_console(friends_online)
+        if login:
             break
+    while True:
+        password = get_user_password()
+        if password:
+            break
+    friends_online = get_online_friends(login, password)
+    output_friends_to_console(friends_online)
